@@ -1,3 +1,15 @@
+<?php 
+
+/**
+ * Please use Docblock comments styles and 
+ * leave 5 lines between entries.
+ * I'll add categorisation and indexing
+ * once this becomes large.
+ */
+
+?>
+
+
 <?php
 /**
  * Returns array of sub categories, if there
