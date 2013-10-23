@@ -154,3 +154,51 @@ register_taxonomy(
 );
 
 ?>
+
+
+
+
+
+
+<?php 
+/**
+ * Get lowest child taxonomy that the current post 
+ * belongs to and loop through the titles of any posts
+ * belonging to it
+ * @author  Rory Ashford <rory@roikles.com>
+ * @author  Ash Davies <ash.davies@outlook.com>
+ * 
+ */
+
+$taxonomy = 'sections';
+$tax_terms = get_the_terms( $post->ID,$taxonomy );
+
+foreach ($tax_terms as $tax_term){
+    $args = array( 'child_of'=> $tax_term->term_id );
+    //get all child of current term
+    $child = get_terms( $taxonomy, $args );
+    if( $tax_term->parent != '0' && count($child) =='0'){
+		$parent_section = $tax_term;
+
+		// Assign args for posts with assigned parent term_id
+		$args = array( 
+			'post_type' => 'articles',
+			$taxonomy => $parent_section->slug
+			);
+
+		$sections = new WP_Query($args);
+
+		// The Loop
+		if ( $sections->have_posts() ) {
+			while ( $sections->have_posts() ) {
+				$sections->the_post();
+				echo '<li>' . get_the_title() . '</li>';
+			}
+		} else {
+			// no posts found
+		}
+		/* Restore original Post Data */
+		wp_reset_postdata();
+    }
+}
+?>
