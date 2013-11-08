@@ -202,3 +202,45 @@ foreach ($tax_terms as $tax_term){
     }
 }
 ?>
+
+
+
+
+<?php
+/**
+ * Fetches images from ACF Gallery
+ * by passing a post ID and quantity
+ * 
+ * @param  [int] $post_id Current post ID
+ * @param  [int] $qty     Number of images to show
+ * @return [str]          Returns list of images
+ * @author  Ash Davies <ash.davies@outlook.com>
+ */
+function get_gallery_imgs($post_id,$qty);
+	$gallery = get_post($post_id);
+	$gallery_id = $gallery->ID;
+
+	if(get_post_meta($post_id)){
+		$gallery_meta = get_post_meta($gallery_id);
+
+		$prepend = '<li><img src="';	$append = '"/></li>';
+
+		$gallery_ids = maybe_unserialize($gallery_meta['gallery'][0]);
+
+		$i = 1;
+		foreach($gallery_ids as $img){
+			$img_arr = wp_get_attachment_image_src($img,'medium');
+			$img_url = $img_arr[0];
+			
+			echo $prepend . $img_url . $append;
+			if ($i < $qty) {
+				$i++;
+			}else{
+				return false;
+			}
+		}
+	}else{
+		return false;
+	}
+}
+?>
